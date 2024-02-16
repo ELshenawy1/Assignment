@@ -1,0 +1,64 @@
+﻿@model Pagination<Vacation>
+@{
+    var pageIndex = Model.PageIndex;
+}
+
+<thead>
+    <tr class="table-active">
+        <th scope="col">#</th>
+        <th scope="col">Submission Date</th>
+        <th scope="col">Employee Name</th>
+        <th scope="col">Department</th>
+        <th scope="col">From</th>
+        <th scope="col">To</th>
+        <th scope="col">More Info</th>
+    </tr>
+</thead>
+
+<tbody>
+    @foreach (var vacation in Model.Data)
+    {
+        <tr class="table-secondary">
+            <td>@vacation.Id</td>
+            <td>@vacation.SubmissionDate.ToString("M/d/yyyy")</td>
+            <td>@vacation.Employee.UserName</td>
+            <td>@vacation.Department.Name</td>
+
+            <td>@vacation.Start.ToString("M/d/yyyy")</td>
+            <td>@vacation.End.ToString("M/d/yyyy")</td>
+            <td>
+                <a class="btn btn-outline-primary btn-sm" href="/Vacation/GetVacationById/@vacation.Id"><i style="font-size: 1.5rem;" class="bi bi-list"></i></a>
+            </td>
+        </tr>
+    }
+</tbody>
+ <tfoot>
+    <tr>
+        <td class="text-center" colspan="7">
+            <div class="d-flex justify-content-center">
+                <ul class="pagination">
+                    <li class="page-item @(Model.PageIndex == 1 ? "disabled" : "")">
+                        <a class="page-link" onclick="Move(@pageIndex-1)" href=#">&laquo;</a>
+                    </li>
+                    @for (int i = 1; i < Math.Ceiling((double)(Model.Count) / (Model.PageSize)) + 1; i++)
+                    {
+                        <li class="page-item @((pageIndex==i)?"active" : "")">
+                            <a class="page-link" onclick="Move(@i)" href="#">@i</a>
+                        </li>
+                    }
+
+                    <li class="page-item @(Model.PageIndex == Math.Ceiling((double)(Model.Count) / (Model.PageSize))? "disabled" : "")">
+                        <a class="page-link" onclick="Move(@pageIndex+1)" href="#">&raquo;</a>
+                    </li>
+                </ul>
+            </div>
+
+        </td>
+    </tr>
+</tfoot>
+<script>
+    
+
+    function search() {
+    }
+</script>

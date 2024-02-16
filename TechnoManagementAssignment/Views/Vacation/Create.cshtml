@@ -1,0 +1,105 @@
+﻿@using Microsoft.AspNetCore.Identity
+@model Vacation
+@inject UserManager<IdentityUser> userManager
+@{
+    ViewData["Title"] = "Create";
+    var userId = userManager.GetUserId(User);
+
+}
+
+
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+
+            <form method="post">
+                <div asp-validation-summary="All" class="text-danger"></div>
+                <div class="form-group">
+                    <label asp-for="SubmissionDate" class="control-label"></label>
+                    <input type="date" asp-for="SubmissionDate" class="form-control" value="@DateTime.Now.ToString("yyyy-MM-dd")" readonly />
+                    <span asp-validation-for="SubmissionDate" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    <label class="control-label">Employee Name</label>
+                    <input  value="@User.Identity.Name" class="form-control" readonly />
+                </div>
+                <div class="form-group">
+                    <input asp-for="EmployeeId" value="@userId" class="form-control" hidden  />
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="Title" class="control-label"></label>
+                    <input asp-for="Title" class="form-control" />
+                    <span asp-validation-for="Title" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="DepartmentId" class="form-label mtDescription-4">Department</label>
+                    <select class="form-select" asp-for="DepartmentId" asp-items="@ViewBag.depts">
+                    </select>
+                    <span asp-validation-for="DepartmentId" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="Start" class="control-label"></label>
+                    <input type="date" asp-for="Start" class="form-control" />
+                    <span asp-validation-for="Start" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="End" class="control-label"></label>
+                    <input type="date" asp-for="End" class="form-control" />
+                    <span asp-validation-for="End" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="Returning" class="control-label"></label>
+                    <input type="date" asp-for="Returning" class="form-control" readonly />
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="VacationDaysNumber" class="control-label"></label>
+                    <input asp-for="VacationDaysNumber" class="form-control" readonly/>
+                    @* <span asp-validation-for="VacationDaysNumber" class="text-danger"></span> *@
+                </div>
+
+                <input type="submit" value="Register" class="btn btn-primary mt-3" />
+            </form>
+
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        var startInput = document.getElementById("Start");
+        var endInput = document.getElementById("End");
+        var returning = document.getElementById("Returning");
+        var vdn = document.getElementById("VacationDaysNumber");
+
+        endInput.addEventListener("input", function() {
+            var selectedDate = new Date(endInput.value);    
+
+            var dayName = selectedDate.toLocaleDateString('en-US', { weekday: 'long' });
+            var ret = new Date(endInput.value);
+
+
+            if (dayName == 'Thursday')
+                ret.setDate(ret.getDate() + 3)
+            else if (dayName == 'Friday')
+                ret.setDate(ret.getDate() + 2)
+            else if (dayName == 'Saturday')
+                ret.setDate(ret.getDate() + 1)
+
+            ret = (ret.toISOString().slice(0, 10))
+            returning.value = ret
+
+
+            differenceMs = new Date(endInput.value) - new Date(startInput.value)
+            var differenceDays = (differenceMs / (1000 * 60 * 60 * 24))+1;
+            vdn.value = differenceDays;
+        });
+    </script>
+}

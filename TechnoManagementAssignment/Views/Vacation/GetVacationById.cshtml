@@ -1,0 +1,32 @@
+﻿@model Vacation
+@{
+    ViewData["Title"] = "GetVacationById";
+    TimeSpan timeDifference = DateTime.Now - Model.SubmissionDate;
+    int daysDifference = (int)timeDifference.TotalDays;
+    string timeAgo = daysDifference == 0 ? "today" : daysDifference == 1 ? "1 day ago" : $"{daysDifference} days ago";
+
+}
+<div class="container text-center d-flex justify-content-center align-items-center" >
+    <div class="card mb-3 w-50">
+        <h3 class="card-header">@Model.Id</h3>
+        <div class="card-body">
+            <h5 class="card-title">@Model.Employee.UserName</h5>
+            <h6 class="card-subtitle text-muted">@Model.SubmissionDate.ToString("M/d/yyyy")</h6>
+        </div>
+        <div class="card-body">
+            <p class="card-text">@Model.Title</p>
+        </div>
+        <ul class="list-group list-group-flush">
+            <li class="list-group-item">From : @Model.Start.ToString("M/d/yyyy")</li>
+            <li class="list-group-item">To : @Model.End.ToString("M/d/yyyy")</li>
+            <li class="list-group-item">Vacation Days Number : @Model.VacationDaysNumber</li>
+        </ul>
+        <div class="card-body">
+            <a href="/Vacation/Index" class="card-link">Back To List</a>
+        </div>
+        <div class="card-footer text-muted">
+            @timeAgo
+        </div>
+    </div>
+</div>
+

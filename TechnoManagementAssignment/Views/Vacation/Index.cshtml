@@ -1,0 +1,63 @@
+﻿@model Pagination<Vacation>
+@{
+    ViewData["Title"] = "Index";
+}
+
+<div>
+    <h5 class="text-warning ms-3">Sort</h5>
+    <select class="form-select mb-4" onchange="search(true)" id="orderSelect">
+        <option value="Latest">Latest</option>
+        <option value="Oldest">Oldest</option>
+    </select>
+
+</div>
+<div class="mt-2 d-flex mb-3">
+    <input type="text" (keyup.enter)="onSearch()" class="form-control me-2" placeholder="Search" id="searchInput" />
+    <button onclick="search(true)" class="btn btn-outline-primary mx-2">Search</button>
+    <button onclick="search(false)" class="btn btn-outline-secondary">Reset</button>
+</div>
+
+
+<table id="vacationTable" class="table table-hover">
+</table>
+@section Scripts {
+    <script>
+        var searchValue = document.getElementById("searchInput")
+        var vacationTable = document.getElementById("vacationTable")
+        var orderSelect = document.getElementById("orderSelect");
+        DO()
+
+        function DO() {
+            $.ajax({
+                url: `/Vacation/GetVacations?Search=${searchValue.value}&Sort=${orderSelect.value}`,
+                success: function (result) {
+                    vacationTable.innerHTML = result
+                }
+            });
+
+        }
+        function Move(num) {
+            $.ajax({
+                url: `/Vacation/GetVacations?Search=${searchValue.value}&pageIndex=${num}&Sort=${orderSelect.value}`,
+                success: function (result) {
+                    vacationTable.innerHTML = result
+                }
+            });
+        }
+
+        function search(flag){
+            if (!flag) {
+                searchValue.value = ''
+            }
+            $.ajax({
+                url: `/Vacation/GetVacations?Search=${searchValue.value}&Sort=${orderSelect.value}`,
+                success: function (result) {
+                    vacationTable.innerHTML = result
+                }
+            });
+
+        }
+
+    </script>
+    <partial name="_ValidationScriptsPartial" />
+}
